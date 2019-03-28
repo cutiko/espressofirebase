@@ -30,5 +30,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
-    debugImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.1'
 }
