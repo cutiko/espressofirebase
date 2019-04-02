@@ -1,7 +1,6 @@
 package cl.cutiko.espresofirebase;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,7 +33,6 @@ public abstract class FireBaseTest implements OnCompleteListener<AuthResult> {
         final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         int apps = FirebaseApp.getApps(context).size();
         if (apps == 0) {
-            Log.d("CUTIKO_TAG", "FireBaseTest.java" + " prepare: inside");
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setApiKey(BuildConfig.apiKey)
                     .setApplicationId(BuildConfig.applicationId)
