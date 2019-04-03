@@ -1,5 +1,7 @@
 package cl.cutiko.espresofirebase.views.main;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -39,6 +41,7 @@ public class Presenter implements MainContract.Presenter, ValueEventListener {
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+        Log.e(getClass().getName(), databaseError.getMessage(), databaseError.toException());
+        callback.error();
     }
 }
