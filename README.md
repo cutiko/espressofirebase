@@ -136,4 +136,5 @@ android {
     }
 }
 ```
- 
+
+If you are confuse here is the the [workshop file](https://github.com/cutiko/espressofirebase/blob/workshop/app/build.gradle)
