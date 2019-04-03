@@ -1,10 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
-def fireFile = rootProject.file("firebase.properties")
-def fireProperties = new Properties()
-fireProperties.load(new FileInputStream(fireFile))
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -17,6 +13,10 @@ android {
     }
     buildTypes {
         debug {
+            def fireFile = rootProject.file("firebase.properties")
+            def fireProperties = new Properties()
+            fireProperties.load(new FileInputStream(fireFile))
+
             buildConfigField "String", "applicationId", fireProperties['applicationId']
             buildConfigField "String", "apiKey", fireProperties['apiKey']
             buildConfigField "String", "projectId", fireProperties['projectId']
