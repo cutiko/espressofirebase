@@ -9,11 +9,11 @@ import java.util.Iterator;
 import androidx.annotation.NonNull;
 import cl.cutiko.espresofirebase.data.Nodes;
 
-public class Presenter implements MainContract.Presenter, ValueEventListener {
+public abstract class MainPresenter implements MainContract.Presenter, ValueEventListener {
 
     private final MainContract.View callback;
 
-    public Presenter(MainContract.View callback) {
+    public MainPresenter(MainContract.View callback) {
         this.callback = callback;
     }
 
