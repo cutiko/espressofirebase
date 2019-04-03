@@ -39,7 +39,7 @@ This will guide you to run the basic app:
     "tasks": {
       "$uid": {
         ".read": "auth.uid === $uid",
-    		".write": "auth.uid === $uid"
+    		  ".write": "auth.uid === $uid"
       }
     }
   }
