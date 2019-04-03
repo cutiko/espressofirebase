@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EspresoFirebase</string>
     <string name="getting_tasks_count">Getting Tasks Count</string>
+    <string name="error">Error</string>
     <plurals name="tasks_plurals">
         <item quantity="one">%d task</item>
         <item quantity="other">%d tasks</item>
