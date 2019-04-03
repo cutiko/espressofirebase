@@ -100,3 +100,40 @@ This are mostly the same instructions that you could fing in the [Android Docume
 
 ### Firebase Credentials
 **When we move to create the tests, we will find 2 issues, the initializing the FirebaseApp and login the user**, we have partially take care of the second by creating a test user (test@app.io) in the [6 step of the setup](https://github.com/cutiko/espressofirebase#setup). We now have to take care of what we need for initializing the FirebaseApp manually.
+
+ 1. In the root directory of the project create a file called `firebase.properties` if you are using the Android view you can change it to project or just do it using the explorer. **You need to ignore that file from version control if you are planning to plublish the repo**
+ 2. Open your `google-services.json`
+ 3. This is the content of the `firebase.properties` file:
+ 
+```
+applicationId="1:REPLACE_THIS:android:NUMBERS_AND_LETTERS"
+apiKey="AIzaREPLACE_THIS_SOME_RANDOM_CHARACTERS"
+projectId="REPLACE_THIS_IS_THE_NAME_OF_YOUR_PROJECT"
+databaseUrl="REPLACE_THIS_IS_THE_URL_OF_YOUR_PROJECT"
+```
+ 4. You have to replace every text with the equivalent in the `google-services.json` file, the names are mostly the same
+ 5. No we have to make this credentials available for our project, we will do this using the `buildConfigField` in  the module app gradle:
+ 
+```
+android {
+    ...
+    buildTypes {
+       ...
+       //You need to add this buildVariant it is always used for default, but now we needed explicitly
+        debug {
+            //This read the file we created
+            def fireFile = rootProject.file("firebase.properties")
+            def fireProperties = new Properties()
+            fireProperties.load(new FileInputStream(fireFile))
+        
+            //This will get each key and make it available for the project
+            buildConfigField "String", "applicationId", fireProperties['applicationId']
+            buildConfigField "String", "apiKey", fireProperties['apiKey']
+            buildConfigField "String", "projectId", fireProperties['projectId']
+            buildConfigField "String", "databaseUrl", fireProperties['databaseUrl']
+        }
+        ...
+    }
+}
+```
+ 
