@@ -138,3 +138,82 @@ android {
 ```
 
 If you are confuse here is the the [workshop file](https://github.com/cutiko/espressofirebase/blob/workshop/app/build.gradle)
+
+### Creating the base test
+As it was said, when try to test a project using Firebase we will have to 2 problems:
+
+ - Initializing the FirebaseApp
+ - Login in an user
+
+ 1. Go to the `androidTest` directory, in this case is `cl.cutiko.espresofirebase (androidTest)`
+ 2. Create an abstract class called `FireBaseTest`
+ 3. Annotate your class with @RunWith(AndroidJUnit4.class) (this annotation is inherit so we can use it here)
+ 4. Implements `OnCompleteListener<AuthResult>`
+ 5. This is how the base test should look
+ 
+ 
+ ```
+    private static final String IDLING_NAME = "cl.cutiko.espresofirebase.FireBaseTest.key.IDLING_NAME";
+    private static final CountingIdlingResource idlingResource = new CountingIdlingResource(IDLING_NAME);
+
+    @Before
+    public void prepare() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        int apps = FirebaseApp.getApps(context).size();
+        if (apps == 0) {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setApiKey(BuildConfig.apiKey)
+                    .setApplicationId(BuildConfig.applicationId)
+                    .setDatabaseUrl(BuildConfig.databaseUrl)
+                    .setProjectId(BuildConfig.projectId)
+                    .build();
+            FirebaseApp.initializeApp(context, options);
+        }
+        if (!new CurrentUser().isLogged()) {
+            IdlingRegistry.getInstance().register(idlingResource);
+            FirebaseAuth.getInstance()
+                    .signInWithEmailAndPassword("test@app.io", "12345678")
+                    .addOnCompleteListener(this);
+            idlingResource.increment();
+            onIdle();
+        }
+    }
+
+
+    @Override
+    public void onComplete(@NonNull Task<AuthResult> task) {
+        if (task.isSuccessful()) {
+            idlingResource.decrement();
+        } else {
+            fail("The user was not logged successfully");
+        }
+    }
+ ```
+ - We are using the `@Before` annotation for making sure everything we need in our Firebase test to be ready before the tests. I don't recommend do this in the `@BeforeClass` because that annotation force the method to be `static` wich can turn inconvenient.
+ - Since we are using the `@Before` annotation, this would happen everytime before each `@Test` method, that is why there are 2 validations, in case our tests files have more than 1 test.
+ - The first we are doing is to make sure the `FirebaseApp` is not initialized previously. In our case **it will be initialized**, so why are we adding that code? The `apply plugin: 'com.google.gms.google-services'` can only be in the module app gradle, it takes care of reading the `google-services.json` file and initialize the `FirebaseApp`, so no need for it as long as the project is a mono-module. Any multi-module project will have to solve this problem. As you can see the manual initializtion is using the credentials we exposed as the `buildConfigField` on the gradle.
+ - The second is to check if the user is logged or not, if it is not logged, then we have to logged, and only move forward when the loggin is completed. So if the user is not logged in, we are signin with the email and password we create for our test user.
+
+This is the first time we are introducing the `IdlingResource`, that is the Espresso library we add for `debugImplementation`, it'll be good to take some lines to explained it further
+
+#### IdlingResource
+You can find the official [Android Documentation here](https://developer.android.com/training/testing/espresso/idling-resource), every sample for [Espresso is here](https://github.com/googlesamples/android-testing) and [this is the specific sample](https://github.com/googlesamples/android-testing/tree/master/ui/espresso/IdlingResourceSample) for `IdlingResources`. **Is strongly recommended to see the IdlingResourceSample**.
+
+IdlingResource works like a semaphore of work, Espresso use *magic* to know when there is work been done and has to wait and then when the work has completed to continue with the tests.
+
+ 1. Always register your IdlingResource
+ 2. Use the IdlingResource to notify there is work, Espresso will wait
+ 3. Use the IdlingResource to notify work is done, Espresso will continue the tests
+ 4. If there are no more test, make sure to use `onIdle`
+ 5. It is recommended to unregister your IdlingResource
+ 
+In this case we are using a `CountingIdlingResource` when the work start we increase it and when the work is done we decrease it. You can do yout own IdlingResource by extending the Espresso classes, but for our purpouse this will work. The only warning is the `CountingIdlingResource` can be corrupted if the decreasing happens more times than the increasing (lower than zero).
+
+This could be done by other means, but this is the minimal approach:
+
+ - `CountDownLatch` having a framework to compare, is considered bad practice, take a look at this [SO answer](https://stackoverflow.com/a/3802487/4017501)
+ - Using RxFirebase, look at this [SO answer](https://stackoverflow.com/a/49572189/4017501)
+ - This could be done using Kotlin Coroutines, you can take a look at this [Google Lab](https://codelabs.developers.google.com/codelabs/kotlin-coroutines/#6)
+
+##### Summary
+The `@Before` method will be hold untill the login is succesfull or fails using the `CountingIdlingResource`, and after that our tests will run, no race conditions.
