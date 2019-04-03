@@ -28,10 +28,10 @@ The project uses firebase-ui-auth for creating a quick login using email and the
 ## Setup
 This will guide you to run the basic app:
 
- 1 Clone the project, fork it, however you feel more comfortable
- 2 You have to link the project with a Firebase project of your own, you can use the Android Studio Assistant or do it manually. The file **google-services.json** is not provided.
- 3 Make sure you have created the Real-Time Database for the Firebase project
- 4 This are the database rules you need
+ 1. Clone the project, fork it, however you feel more comfortable
+ 2. You have to link the project with a Firebase project of your own, you can use the Android Studio Assistant or do it manually. The file **google-services.json** is not provided.
+ 3. Make sure you have created the Real-Time Database for the Firebase project
+ 4. This are the database rules you need
  
  ```
  {
@@ -46,11 +46,11 @@ This will guide you to run the basic app:
 }
 ```
 
- 5 Run the app
- 6 Create a user with the email `test@app.io` and the password `12345678` (this is our test user)
- 7 After the login in the `MainActivity` you should see 0 tasks
- 8 Now go the Firebase web console and in the Authentication section copy your user UID
- 9 Replace the UID in the following data, create a Json file with it, and upload it to the RTD
+ 5. Run the app
+ 6. Create a user with the email `test@app.io` and the password `12345678` (this is our test user)
+ 7. After the login in the `MainActivity` you should see 0 tasks
+ 8. Now go the Firebase web console and in the Authentication section copy your user UID
+ 9. Replace the UID in the following data, create a Json file with it, and upload it to the RTD
  
 ```
 {
@@ -64,4 +64,4 @@ This will guide you to run the basic app:
 }
 ```
 
- 10 Restart the app, the user should be already logged and you will see 3 tasks.
+ 10. Restart the app, the user should be already logged and you will see 3 tasks.
