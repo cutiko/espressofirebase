@@ -217,3 +217,6 @@ This could be done by other means, but this is the minimal approach:
 
 ##### Summary
 The `@Before` method will be hold untill the login is succesfull or fails using the `CountingIdlingResource`, and after that our tests will run, no race conditions.
+
+### Refactor Presenter to us IdlingResource
+
