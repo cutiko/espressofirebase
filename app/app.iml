@@ -87,6 +87,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/generated/source/r" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/annotation_processor_list" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/apk_list" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/app_classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundle_manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check_manifest_result" />
@@ -110,6 +111,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/signing_config" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/validate_signing_config" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
@@ -144,7 +146,6 @@
     <orderEntry type="library" name="Gradle: androidx.slidingpanelayout:slidingpanelayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-flags:16.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.media:media:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.test.espresso:espresso-idling-resource:3.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable:1.1.0-alpha02@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-runtime:2.1.0-alpha03@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement:16.2.0@aar" level="project" />
