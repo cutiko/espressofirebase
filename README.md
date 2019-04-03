@@ -98,3 +98,5 @@ This are mostly the same instructions that you could fing in the [Android Docume
 
  - We are adding the `espresso-idling-resource` as a debug dependency because we don't want to carry it to the release version of the app but still be able to use in the our testing, we are gonna use build variants for this later (more info later as well)
 
+### Firebase Credentials
+**When we move to create the tests, we will find 2 issues, the initializing the FirebaseApp and login the user**, we have partially take care of the second by creating a test user (test@app.io) in the [6 step of the setup](https://github.com/cutiko/espressofirebase#setup). We now have to take care of what we need for initializing the FirebaseApp manually.
