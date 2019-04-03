@@ -65,3 +65,36 @@ This will guide you to run the basic app:
 ```
 
  10. Restart the app, the user should be already logged and you will see 3 tasks.
+
+# Workshop
+The following is the step by step to build your Espresso tests, you can switch to a new branch or work on master, whatever suits you.
+
+
+### Dependencies
+
+ 1. Go to your `gradle app` and add the depencies
+
+```
+android {
+    ...
+    defaultConfig {
+        ...
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ...
+    }
+    ...
+}
+
+dependencies {
+   ...
+   testImplementation 'junit:junit:4.12'
+   androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+   androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+   debugImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.1'
+}
+```
+
+This are mostly the same instructions that you could fing in the [Android Documentatio](https://developer.android.com/training/testing/espresso/setup#add-espresso-dependencies) with a differences for our use case:
+
+ - We are adding the `espresso-idling-resource` as a debug dependency because we don't want to carry it to the release version of the app but still be able to use in the our testing, we are gonna use build variants for this later (more info later as well)
+
