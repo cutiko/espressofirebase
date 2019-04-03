@@ -24,3 +24,44 @@ implementation 'com.google.firebase:firebase-database:16.1.0'
 If you want to look at the final result you can switch to the workshop branch.
 
 The project uses firebase-ui-auth for creating a quick login using email and then will move forward to another screen where a query to the RTD is performed and the UI is updated. The project us the MVP pattern.
+
+## Setup
+This will guide you to run the basic app:
+
+ 1 Clone the project, fork it, however you feel more comfortable
+ 2 You have to link the project with a Firebase project of your own, you can use the Android Studio Assistant or do it manually. The file **google-services.json** is not provided.
+ 3 Make sure you have created the Real-Time Database for the Firebase project
+ 4 This are the database rules you need
+ 
+ ```
+ {
+  "rules": {
+    "tasks": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+    		".write": "auth.uid === $uid"
+      }
+    }
+  }
+}
+```
+
+ 5 Run the app
+ 6 Create a user with the email `test@app.io` and the password `12345678` (this is our test user)
+ 7 After the login in the `MainActivity` you should see 0 tasks
+ 8 Now go the Firebase web console and in the Authentication section copy your user UID
+ 9 Replace the UID in the following data, create a Json file with it, and upload it to the RTD
+ 
+```
+{
+  "tasks": {
+    "REPLACE_THIS_WITH_YOUR_UID": {
+      "-Lb4zAYdzn53BIsG4XcX": "one",
+      "-Lb4zAYdzn53BIsG4XcY": "two",
+      "-Lb4zAYdzn53BIsG4XcZ": "three"
+    }
+  }
+}
+```
+
+ 10 Restart the app, the user should be already logged and you will see 3 tasks.
