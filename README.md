@@ -332,7 +332,61 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 ```
 
 ### Creating the Presenter test
+Now that we have all the parts we need to put them together. Go to the `androidTest` and create the following class and methods
+
+```
+public class MainPresenterTest extends FireBaseTest implements MainContract.View {
+
+    private final Presenter presenter = new Presenter(this);
+
+    @Test
+    public void testGetUserTasks() {
+        IdlingRegistry.getInstance().register(Presenter.idling);
+        presenter.getUserTasks();
+        onIdle();
+    }
+
+    @Override
+    public void setTasksNumber(int count) {
+        assertEquals(3, count);
+    }
+
+    @Override
+    public void error() {
+        fail("Database Error");
+    }
+}
+```
+
+ - Always remember to register the IdlingResource, in this case we can easily get it from the presenter
+ - The presenter inner work will use the IdlingResource to indicate when the work starts and end
+ - **We have to use onIdle() method**, after `presenter.getUserTasks()` there are no more Espreso test, so there we have to use `onIdle()` otherwise it won't work
+ - Remember we have 3 tasks in our RTD, however the test could have been writen differently
 
 ### Creating the UI test
+For creating the UI test of the `MainActivity` is pretty much the same, we do have to be aware of some nuances. We can't use `@Rule` annotation because the activity is starting the presenter on the `onCreate` and `@Rule` would happen before `@Before`. So we have to launch the Activity in the test
+
+```
+public class MainActivityTest extends FireBaseTest {
+
+    @Test
+    public void taskCountTvTextTest() {
+        IdlingRegistry.getInstance().register(Presenter.idling);
+        ActivityScenario.launch(MainActivity.class);
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        final Resources resources = context.getResources();
+        String text = resources .getQuantityString(R.plurals.tasks_plurals, 3, 3);
+        onView(withId(R.id.taskCountTv)).check(matches(withText(text)));
+    }
+
+}
+```
+
+ - Please notice that we don't need to use `onIdle()` this time because after the async work has started there are more Espresso tests, so Espreso is aware of the IdlingResource nad know it has to wait.
+ - As usual we **have to register the IdlingResource** again, we can easily obtained from the `Presenter`
 
 ### Firebase Test Lab
+For using the Firebase Test Lab select the other tab when launching the tests. You should know a couple of things:
+
+ - The configurations proposed there have plenty of unexistent devices, is better to create a device matrix direcly on the web console
+ - The device Matrix created and your project can take some time to show up, don't know why, usually one day is enough
