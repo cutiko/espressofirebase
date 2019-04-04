@@ -218,5 +218,116 @@ This could be done by other means, but this is the minimal approach:
 ##### Summary
 The `@Before` method will be hold untill the login is succesfull or fails using the `CountingIdlingResource`, and after that our tests will run, no race conditions.
 
-### Refactor Presenter to us IdlingResource
+### Refactor Presenter to use IdlingResource
+The presenter is in charge of the workload, so one way to use the IdlingResource is to use it there, indicating when the work start and when the work finished. The problem is we don't need to have the IdlingResource on the release apk, remember we add the dependency as `debugImplementation` [at the start](https://github.com/cutiko/espressofirebase#dependencies). So what we will do is to have a presenter for debug and another for release. The debug presenter will include the usage of IdlingResource while the release debug will not add any extra behaviour. Our current presenter is on the `main` directory, so we will have to refactor it to make it `abstract`, then extend it on the build variant versions, and fix the reference in the `MainActivity`.
+
+ 1. Open the `Presenter` refactor it to be called `MainPresenter`
+ 2. Make it abstract
+ 
+ ```
+ public abstract class MainPresenter implements MainContract.Presenter, ValueEventListener {
+
+    public MainPresenter(MainContract.View callback) {
+        this.callback = callback;
+    }
+}
+```
+
+ 3. Now we have to create the presenters for each build variant, if the Android Studio directory tree confuses you, change it to project or use the file explorer of the OS, your directory should look like the example:
+
+```
+espressofirebase/app/src
+├── androidTest
+|
+├── debug
+|  └── java
+|     └── cl
+|        └── cutiko
+|           └── espresofirebase
+|              └── views
+|                 └── main
+|                    └── Presenter.java
+|
+├── main
+|  ├── java
+|     └── cl
+|        └── cutiko
+|           └── espresofirebase
+|              ├── data
+|              └── views
+|                 ├── login
+|                 └── main
+|                    ├── MainActivity.java
+|                    ├── MainContract.java
+|                    └── MainPresenter.java
+|
+├── release
+|  └── java
+|     └── cl
+|        └── cutiko
+|           └── espresofirebase
+|              └── views
+|                 └── main
+|                    └── Presenter.java
+|
+└── test
+```
+
+ 4. The `Presenter.java` in the release version will only extend the `MainPresenter`
+ 
+```
+public class Presenter extends MainPresenter
+//Don't forget the mandatory constructor
+```
+ 
+ 5. The `Presenter.java` in the Ddebug version will extend the `MainPresenter` and will use the IdlingResource. We are gonna make the IdlingResource easily accesible to make the `IdlingRegistry` easier and we have to override the methods that start the work and end the work to add the IdlingResoruce correspondingly
+ 
+```
+public class Presenter extends MainPresenter {
+
+    private static final String MAIN_PRESENTER = "cl.cutiko.espresofirebase.views.main.Presenter.key.MAIN_PRESENTER";
+    public static final CountingIdlingResource idling = new CountingIdlingResource(MAIN_PRESENTER);
+
+    public Presenter(MainContract.View callback) {
+        super(callback);
+    }
+
+    @Override
+    public void getUserTasks() {
+        super.getUserTasks();
+        idling.increment();
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        super.onDataChange(dataSnapshot);
+        idling.decrement();
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+        super.onCancelled(databaseError);
+        idling.decrement();
+    }
+}
+```
+
+6. Now go to the `MainActivity.class` and change the reference to `Prensenter.java`
+
+```
+public class MainActivity extends AppCompatActivity implements MainContract.View {
+
+    private TextView tv;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tv = findViewById(R.id.taskCountTv);
+        //Here, fix this
+        new Presenter(this).getUserTasks();
+    }
+    //More code below
+}
+```
 
