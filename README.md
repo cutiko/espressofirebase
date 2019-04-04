@@ -29,7 +29,7 @@ The project uses firebase-ui-auth for creating a quick login using email and the
 This will guide you to run the basic app:
 
  1. Clone the project, fork it, however you feel more comfortable
- 2. You have to link the project with a Firebase project of your own, you can use the Android Studio Assistant or do it manually. The file **google-services.json** is not provided.
+ 2. You have to link the project with a Firebase project of your own, you can use the Android Studio Assistant or do it manually. The file **google-services.json** is not provided and for public should be ignored from VCS.
  3. Make sure you have created the Real-Time Database for the Firebase project
  4. This are the database rules you need
  
