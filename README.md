@@ -6,6 +6,8 @@ covers specifically how to solve the Firebase problems and make it play along wi
 
 In the following, you'll find how to set up the project and the step by step process.
 
+The slides can be found in the [root directory](https://github.com/cutiko/espressofirebase/blob/master/Firebase%20Android%20Espresso.pdf)
+
 ## Overview
 This project is using `androidx` if your project has not migrated yet the general approach should still be valid, you will need to change the reference accordingly.
 
